@@ -1,0 +1,24 @@
+{
+  "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+  "abi": [
+    "constructor()",
+    "event AdminChanged(address,address)",
+    "event BeaconUpgraded(address indexed)",
+    "event Initialized(uint8)",
+    "event OwnershipTransferred(address indexed,address indexed)",
+    "event Upgraded(address indexed)",
+    "function allAuctions(uint256) view returns (address)",
+    "function beacon() view returns (address)",
+    "function createAuction(uint256,address,address,uint256,uint256,address) returns (address)",
+    "function getAllAuctions() view returns (address[])",
+    "function initialize(address)",
+    "function owner() view returns (address)",
+    "function proxiableUUID() view returns (bytes32)",
+    "function renounceOwnership()",
+    "function transferOwnership(address)",
+    "function upgradeImplementation(address)",
+    "function upgradeTo(address)",
+    "function upgradeToAndCall(address,bytes) payable"
+  ],
+  "numDeployments": 1
+}

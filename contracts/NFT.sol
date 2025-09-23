@@ -20,12 +20,18 @@ contract NFT is ERC721,ERC721URIStorage,Ownable {
     function mintNFT(address to,string memory tokenUrl) public onlyOwner returns (uint256) {
         require(to != address(0), "NFT: mint to zero address");
         _tokenIds++;
-        //调用ERC721的_mint方法
-        _mint(to, _tokenIds);
-        _ownerTokens[to].push(_tokenIds);
-        //调用ERC721URIStorage的_setTokenURI方法
-        _setTokenURI(newTokenId, tokenUrl);
-        return _tokenIds;
+        uint256 currentTokenId = _tokenIds; // 临时变量记录当前 tokenId
+        
+        _mint(to, currentTokenId);
+        _ownerTokens[to].push(currentTokenId);
+        _setTokenURI(currentTokenId, tokenUrl); // 用临时变量，逻辑更清晰
+        
+        return currentTokenId;
+    }
+    function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) {
+        // super.tokenURI(tokenId) 会优先调用继承链中“最后声明的基类”的函数
+        // 这里因为继承顺序是 ERC721 → ERC721URIStorage，所以会使用 ERC721URIStorage 的实现
+        return super.tokenURI(tokenId);
     }
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, ERC721URIStorage) returns (bool){
         return super.supportsInterface(interfaceId);

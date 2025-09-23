@@ -11,16 +11,12 @@ import "./Auction.sol"; // 引入上面的 Auction 子合约
 contract AuctionFactory is UUPSUpgradeable, OwnableUpgradeable {
     UpgradeableBeacon public beacon; // 代理合约
     address[] public allAuctions;
-
-    constructor() {
-        _disableInitializers();
-    }
-
+    event AuctionCreated(address indexed auctionAddress, uint256 indexed tokenId, address indexed creator);
     function initialize(address _implementation) public initializer {
         __Ownable_init();
         __UUPSUpgradeable_init();
 
-        beacon = new UpgradeableBeacon(_implementation);
+        beacon = new UpgradeableBeacon(_implementation, msg.sender);
 
     }
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
@@ -41,16 +37,19 @@ contract AuctionFactory is UUPSUpgradeable, OwnableUpgradeable {
             _nftContract,
             _tokenId,
             msg.sender,
-            _priceOracle)
+            _priceOracle,
+            _paymentToken)
         );
         //获取其地址
-        address auctionAddress = address(auctionProxy);
+        
+        address payable auctionAddress = payable(address(auctionProxy));
         allAuctions.push(auctionAddress);
-        // 转移所有权给调用者
-        Auction(auctionAddress).transferOwnership(msg.sender);
+        emit AuctionCreated(auctionAddress, _tokenId, msg.sender);
         return auctionAddress;
     }
-    
+    function stratAuction(address _auctionAddress, uint256 _tokenId) public {
+        Auction(payable(_auctionAddress)).startAuction(_tokenId);
+    }
     // 获取所有拍卖地址
     function getAllAuctions() public view returns (address[] memory) {
         return allAuctions;

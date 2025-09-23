@@ -1,0 +1,19 @@
+{
+  "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+  "abi": [
+    "constructor()",
+    "error OwnableInvalidOwner(address)",
+    "error OwnableUnauthorizedAccount(address)",
+    "event OwnershipTransferred(address indexed,address indexed)",
+    "event PriceFeedAdded(address indexed,address indexed)",
+    "function addPriceFeed(address,address)",
+    "function getETHPriceInUSD(uint256) view returns (uint256)",
+    "function getPriceInUSD(address,uint256) view returns (uint256)",
+    "function getTokenPriceInUSD(address,uint256) view returns (uint256)",
+    "function owner() view returns (address)",
+    "function priceFeeds(address) view returns (address)",
+    "function renounceOwnership()",
+    "function transferOwnership(address)"
+  ],
+  "numDeployments": 1
+}

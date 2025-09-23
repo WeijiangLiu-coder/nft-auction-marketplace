@@ -20,8 +20,9 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 // 4. 最后导入本地合约和 Chainlink 价格预言机接口
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol"; // PriceOracle 依赖
 import "./PriceOracle.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract Auction is CCIPReceiver, UUPSUpgradeable, OwnableUpgradeable,ReentrancyGuard{
+contract Auction is CCIPReceiver, UUPSUpgradeable, OwnableUpgradeable,ReentrancyGuardUpgradeable {
     
     // 拍卖状态
     enum AuctionStatus {
@@ -38,8 +39,6 @@ contract Auction is CCIPReceiver, UUPSUpgradeable, OwnableUpgradeable,Reentrancy
     uint256 startTime;
     //持续事件（秒）
     uint256 duration;
-    //NFT所有者
-    address owner;
     //起拍价
     uint256 price;
     //当前价格USDT
@@ -78,7 +77,9 @@ contract Auction is CCIPReceiver, UUPSUpgradeable, OwnableUpgradeable,Reentrancy
         _transferOwnership(_realOwner);
         priceOracle = PriceOracle(_priceOracle);
         //计算初始USDT价格
-        currentUSDTPrice = priceOracle.getPriceInUSD(_paymentToken, _startPrice);
+        //currentUSDTPrice = priceOracle.getPriceInUSD(_paymentToken, _startPrice);
+        currentUSDTPrice = 3000e18;
+        paymentToken = _paymentToken;
     }
 
     // 必须重写此函数以保护升级权限
@@ -97,24 +98,29 @@ contract Auction is CCIPReceiver, UUPSUpgradeable, OwnableUpgradeable,Reentrancy
         address _realOwner) public onlyOwner{
         require(_duration > 60, "duration must be greater than 60s");
         require(_startPrice > 0, "startPrice must be greater than 0");
-
-        //授权
-        require(IERC721(_nftContract).getApproved(_tokenId) == address(this), "please call the 'approve' function on the NFT contract directly with this contract's address and your tokenId.");
+        require(IERC721(_nftContract).ownerOf(_tokenId) == _realOwner, "realOwner is not NFT owner");
         
         NFTId = _tokenId;
         NFTContract= _nftContract;
         startTime= block.timestamp;
         duration= _duration;
-        owner= msg.sender;
-        price= _startPrice;
+        price = _startPrice;
         currentPrice= _startPrice;
         currentBidder= address(0);
         status= AuctionStatus.PENDING;
-        
     }
     //开始拍卖
-    function startAuction() public onlyOwner{
+    function startAuction(uint256 _tokenId) public onlyOwner{
         require(status == AuctionStatus.PENDING, "Auction is not pending");
+        // 使用 string.concat (推荐，更直观)
+        require(
+            IERC721(NFTContract).getApproved(_tokenId) == address(this),
+            string.concat(
+                "Auction contract address: ",
+                Strings.toHexString(uint256(uint160(address(this))), 20), // 将地址转换为十六进制字符串
+                ". Please call the 'approve' function on the NFT contract directly with this address and your tokenId."
+            )
+        );
         status = AuctionStatus.ACTIVE;
         startTime= block.timestamp;
     }
@@ -153,8 +159,7 @@ contract Auction is CCIPReceiver, UUPSUpgradeable, OwnableUpgradeable,Reentrancy
 
     }
     // 卖家设置跨链代币映射（源链Selector + 源链代币地址 → 目标链代币地址）
-    function setChainTokenMap(uint64 sourceChainSelector, address sourceToken, address targetToken) external {
-        require(msg.sender == owner, "Only seller");
+    function setChainTokenMap(uint64 sourceChainSelector, address sourceToken, address targetToken) external onlyOwner{
         chainTokenMap[sourceChainSelector][sourceToken] = targetToken;
     }
     // CCIP接收处理函数 - 处理跨链出价
@@ -217,12 +222,12 @@ contract Auction is CCIPReceiver, UUPSUpgradeable, OwnableUpgradeable,Reentrancy
         status = AuctionStatus.ENDED;
         if(currentBidder != address(0)){
             //将NFT转给当前出价人
-            IERC721(NFTContract).safeTransferFrom(owner, currentBidder, NFTId);
+            IERC721(NFTContract).safeTransferFrom(owner(), currentBidder, NFTId);
             //将钱转给拥有者
             if(paymentToken == address(0)){
-                payable(owner).transfer(currentPrice);
+                payable(owner()).transfer(currentPrice);
             }else{
-                IERC20(paymentToken).transfer(owner, currentPrice);
+                IERC20(paymentToken).transfer(owner(), currentPrice);
             }
         }
     }

@@ -1,6 +1,7 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 require("hardhat-deploy");
+require("@openzeppelin/hardhat-upgrades"); 
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -10,5 +11,10 @@ module.exports = {
       url:`https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
       accounts:[process.env.PK]
     }
+  },
+    namedAccounts: {
+      deployer: 0,
+      user1: 1,
+      user2: 2
   }
 };
