@@ -1,8 +1,7 @@
 {
-  "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
   "abi": [
-    "constructor()",
     "event AdminChanged(address,address)",
+    "event AuctionCreated(address indexed,uint256 indexed,address indexed)",
     "event BeaconUpgraded(address indexed)",
     "event Initialized(uint8)",
     "event OwnershipTransferred(address indexed,address indexed)",
@@ -10,15 +9,19 @@
     "function allAuctions(uint256) view returns (address)",
     "function beacon() view returns (address)",
     "function createAuction(uint256,address,address,uint256,uint256,address) returns (address)",
+    "function endAuction(address)",
     "function getAllAuctions() view returns (address[])",
+    "function getAuctionStatus(address) view returns (uint8)",
     "function initialize(address)",
     "function owner() view returns (address)",
     "function proxiableUUID() view returns (bytes32)",
     "function renounceOwnership()",
+    "function stratAuction(address,uint256)",
     "function transferOwnership(address)",
     "function upgradeImplementation(address)",
     "function upgradeTo(address)",
     "function upgradeToAndCall(address,bytes) payable"
   ],
-  "numDeployments": 1
+  "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+  "implementation": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
 }

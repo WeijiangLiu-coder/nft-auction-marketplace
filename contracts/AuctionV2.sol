@@ -22,7 +22,7 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol"; // 
 import "./PriceOracle.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract Auction is UUPSUpgradeable, OwnableUpgradeable,ReentrancyGuardUpgradeable {
+contract AuctionV2 is UUPSUpgradeable, OwnableUpgradeable,ReentrancyGuardUpgradeable {
     
     // 拍卖状态
     enum AuctionStatus {
@@ -87,7 +87,9 @@ contract Auction is UUPSUpgradeable, OwnableUpgradeable,ReentrancyGuardUpgradeab
     function addSupportedChain(uint64 chainSelector) external onlyOwner {
         supportedChains[chainSelector] = true;
     }
-
+    function test() public pure returns (uint256){
+        return 1;
+    }
     //创建拍卖
     function createAuction(
         uint256 _duration, 

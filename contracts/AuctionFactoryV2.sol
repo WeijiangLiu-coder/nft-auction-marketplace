@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
 import "@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol";
 import "./Auction.sol"; // 引入上面的 Auction 子合约
 
-contract AuctionFactory is UUPSUpgradeable, OwnableUpgradeable {
+contract AuctionFactoryV2 is UUPSUpgradeable, OwnableUpgradeable {
     UpgradeableBeacon public beacon; // 代理合约
     address[] public allAuctions;
     event AuctionCreated(address indexed auctionAddress, uint256 indexed tokenId, address indexed creator);
@@ -65,5 +65,8 @@ contract AuctionFactory is UUPSUpgradeable, OwnableUpgradeable {
     // 升级实现合约（只有owner可以调用）
     function upgradeImplementation(address _newImplementation) public onlyOwner {
         beacon.upgradeTo(_newImplementation);
+    }
+    function test() public pure returns (uint256){
+        return 1;
     }
 }

@@ -72,3 +72,12 @@ npx hardhat init
 
 额外挑战（可选）
 1. 动态手续费：根据拍卖金额动态调整手续费。
+
+      revert(
+            string(
+                abi.encodePacked(
+                    "ETH price feed not set. Current address: ",
+                    Strings.toHexString(priceFeeds[address(0)]) // 地址转字符串
+                )
+            )
+        );

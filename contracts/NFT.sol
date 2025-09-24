@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 
-contract NFT is ERC721,ERC721URIStorage,Ownable {
+contract NFT is ERC721URIStorage,Ownable {
 
     uint256 private _tokenIds;
     // 2. 存储每个所有者地址对应的 tokenId 列表（示例：值类型为数组）
@@ -28,12 +28,12 @@ contract NFT is ERC721,ERC721URIStorage,Ownable {
         
         return currentTokenId;
     }
-    function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) {
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {
         // super.tokenURI(tokenId) 会优先调用继承链中“最后声明的基类”的函数
         // 这里因为继承顺序是 ERC721 → ERC721URIStorage，所以会使用 ERC721URIStorage 的实现
         return super.tokenURI(tokenId);
     }
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, ERC721URIStorage) returns (bool){
+    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool){
         return super.supportsInterface(interfaceId);
     }
 }

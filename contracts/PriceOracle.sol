@@ -2,6 +2,7 @@
 pragma solidity ^0.8.28;
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract PriceOracle is Ownable{
     // tokenAddress => priceFeedAddress
@@ -31,10 +32,10 @@ contract PriceOracle is Ownable{
     function getETHPriceInUSD(uint256 _amount) public view returns (uint256) {
         address ethPriceFeed = priceFeeds[address(0)];
         require(ethPriceFeed != address(0), "ETH price feed not set");
-        
+  
         (, int256 price, , , ) = AggregatorV3Interface(ethPriceFeed).latestRoundData();
+        require(1 != 1, "ETH price feed not set");
         uint8 decimals = AggregatorV3Interface(ethPriceFeed).decimals();
-        
         return (_amount * uint256(price)) / (10 ** decimals);
     }
     // 获取ERC20代币的USD价格
