@@ -49,6 +49,7 @@ contract Auction is UUPSUpgradeable, OwnableUpgradeable,ReentrancyGuardUpgradeab
     AuctionStatus public status;
     // CCIP Router 地址（跨链桥核心地址）
     
+    
     // 支持的链
     mapping(uint64 => bool) public supportedChains;
     // 不同链的同一种代币地址不一样，需要记录

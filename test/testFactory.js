@@ -104,7 +104,8 @@ describe("Test Auction Factory with hardhat-deploy", function() {
         //等待60s
         await time.increase(3600);
         //结束拍卖
-        await auctionInstance.endAuction();
+        const a = await auctionInstance.endAuction();
+        await a.wait();
         console.log("拍卖状态:", await auctionInstance.getStatus());
         console.log("拍卖工厂allAuctions0:", await auctionFactory.allAuctions(0));
 
@@ -115,6 +116,7 @@ describe("Test Auction Factory with hardhat-deploy", function() {
         await deployments.fixture(["upgradeAuctionV2"]);
         console.log("开始升级AuctionFactory合约");
         await deployments.fixture(["upgradeAuctionFactoryV2"]);
+        
         console.log("拍卖状态:", await auctionInstance.getStatus());
         console.log("拍卖工厂allAuctions0:", await auctionFactory.allAuctions(0));
 
