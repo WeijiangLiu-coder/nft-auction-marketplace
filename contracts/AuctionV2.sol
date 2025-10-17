@@ -5,7 +5,7 @@ pragma solidity ^0.8.28;
 import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 
 // 2. 再导入 CCIP 相关合约（此时会复用上面的 IERC165）
-import "@chainlink/contracts-ccip/contracts/applications/CCIPReceiver.sol";
+// import "@chainlink/contracts-ccip/contracts/applications/CCIPReceiver.sol";
 import "@chainlink/contracts-ccip/contracts/libraries/Client.sol";
 import "@chainlink/contracts-ccip/contracts/interfaces/IRouterClient.sol";
 
