@@ -317,20 +317,26 @@ contract MetaNodeStake is
         }
 
         (bool success1, uint256 totalMetaNode) = getMultiplier(pool_.lastRewardBlock, block.number).tryMul(pool_.poolWeight);
+        console.log("updatePool totalMetaNode:", totalMetaNode);
         require(success1, "overflow");
 
         (success1, totalMetaNode) = totalMetaNode.tryDiv(totalPoolWeight);
+        console.log("updatePool totalMetaNode:", totalMetaNode);
         require(success1, "overflow");
 
         uint256 stSupply = pool_.stTokenAmount;
         if (stSupply > 0) {
+            console.log("updatePool stSupply:", stSupply);
             (bool success2, uint256 totalMetaNode_) = totalMetaNode.tryMul(1 ether);
+            console.log("updatePool totalMetaNode_:", totalMetaNode_);
             require(success2, "overflow");
 
             (success2, totalMetaNode_) = totalMetaNode_.tryDiv(stSupply);
+            console.log("updatePool totalMetaNode_:", totalMetaNode_);
             require(success2, "overflow");
 
             (bool success3, uint256 accMetaNodePerST) = pool_.accMetaNodePerST.tryAdd(totalMetaNode_);
+            console.log("updatePool accMetaNodePerST:", accMetaNodePerST);
             require(success3, "overflow");
             pool_.accMetaNodePerST = accMetaNodePerST;
         }
@@ -454,7 +460,7 @@ contract MetaNodeStake is
     function _deposit(uint256 _pid, uint256 _amount) internal {
         Pool storage pool_ = pool[_pid];
         User storage user_ = user[_pid][msg.sender];
-
+        
         updatePool(_pid);
 
         if (user_.stAmount > 0) {

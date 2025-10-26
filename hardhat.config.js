@@ -29,5 +29,10 @@ module.exports = {
   },
   coverage: {
     include: ["./contracts/MetaNodeStake.sol"],
+  },
+  // 配置日志级别以显示合约中的console.log
+  logging: {
+    enabled: true,
+    level: "debug"
   }
 };

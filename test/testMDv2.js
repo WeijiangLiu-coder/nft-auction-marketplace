@@ -164,11 +164,14 @@ describe("MDv2", function () {
         const user1Stake = BigInt(hre.ethers.parseEther("300")); // 300 ETH → wei
         const user2Stake = BigInt(hre.ethers.parseEther("200")); // 200 ETH → wei
         const user3Stake = BigInt(hre.ethers.parseEther("500")); // 500 ETH → wei
+        console.log("   当前区块高度为：", await publicClient.getBlockNumber());
         //用户1 质押300ETH
+        console.log("   用户1质押300ETH");
         await MetaNodeStake.write.depositETH({
             account: user1.account,
             value: user1Stake
         })
+        console.log("   用户2质押200ETH");
         const afterDepositBlockUser1 = await publicClient.getBlockNumber();
         //用户2 质押200ETH
         await MetaNodeStake.write.depositETH({
@@ -178,6 +181,8 @@ describe("MDv2", function () {
         const afterDepositBlockUser2 = await publicClient.getBlockNumber();
         console.log("   用户1质押后区块高度:", afterDepositBlockUser1.toString());
         console.log("   用户2质押后区块高度:", afterDepositBlockUser2.toString());
+        console.log("   用户1 finishedMetaNode:", (await MetaNodeStake.read.user([0, user1.account.address]))[1].toString());
+        console.log("   用户2 finishedMetaNode:", (await MetaNodeStake.read.user([0, user2.account.address]))[1].toString());
         //产生100个区块
         await mine(100);
 
